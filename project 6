@@ -1,0 +1,123 @@
+// Author: Sofia Gratny
+// Date: 3/27/2022
+// Purpose: To write a program for analyzing heights which displays height information from a file, calculates average height, or allows the user to add new heights
+
+// Preprocessor:
+#include<stdio.h>
+#define FILE_NAME "heights.txt"
+
+// Function Proto:
+int getmenuchoice(int);
+void displayheights(FILE*);
+void averageheight(FILE*, int*, int*);
+void newheights(FILE*);
+
+// Main Func:
+int main (){
+int input;
+
+// Obtaining User Input
+
+int loopnum = 1;
+do {
+input = getmenuchoice(input);
+	loopnum = input;
+
+switch(input)
+{
+	FILE *fp;
+	case(1):
+		fp = fopen(FILE_NAME, "r");
+		if (fp == NULL){
+			printf("Can't open file\n");
+	}		
+		else{
+		displayheights(fp);
+		fclose(fp);
+	}
+break;
+
+	case(2):
+		fp = fopen(FILE_NAME, "r");
+		
+		if (fp == NULL){
+			printf("Can't open file\n");
+	}
+
+		else{
+		int finavF, finavI;
+		averageheight(fp, &finavF, &finavI);
+		fclose(fp);
+		printf("%d'%d\"\n", finavF, finavI);
+	}
+break;
+
+	 case(3):
+	fp = fopen(FILE_NAME, "a");
+	
+	if (fp == NULL){
+		printf("Can't open file\n");
+	}
+	else {
+		newheights(fp);
+		fclose(fp);
+	}
+break;
+
+	case(0):
+break;
+
+	default:
+		printf("Please enter a valid option!\n");
+	}
+	} while (loopnum != 0);
+
+return 0;
+}
+
+int getmenuchoice(int input){
+	printf("**HEIGHT SYSTEM**\n1. Display Heights\n2. Calculate Average Height\n3. Save New Heights\n0. EXIT\nEnter your choice:  ");
+	scanf("%d", &input);
+return input;
+}
+
+void displayheights(FILE* fp){
+	char first;
+	int feet, inches, line;
+	line = 1;
+	printf("\n  Initial:  Height\n");
+	while(fscanf(fp, " %c %d'%d\"\n", &first, &feet, &inches) == 3) {
+	printf("%d.    %c:  %d'%d\"\n", line, first, feet, inches);
+	line = line + 1;
+	}
+}
+
+void averageheight(FILE* fp, int* finavF, int* finavI){
+	int feet, inches, all, totalnum;
+	char trash;
+	totalnum = 0;
+	all = 0;
+	while(fscanf(fp, " %c %d'%d\"", &trash, &feet, &inches) == 3) {
+	totalnum += 1;
+	all += feet * 12;
+	all += inches;
+}
+	*finavF = (all / totalnum) / 12;
+	*finavI = (all / totalnum) % 12;
+}
+
+
+
+void newheights(FILE* fp){
+	int nheight, fh, fi;
+	char first;
+	int other = 1;
+	printf("How many heights are you adding \n");
+	scanf("%d", &nheight);
+	for(int other = 1; other <= nheight ; other++) {
+		printf("Please enter your intital and height  %d ($ ##'##\"): ", other);
+		scanf(" %c %d'%d\"", &first, &fh, &fi);
+		fprintf(fp, " %c %d'%d\"\n", first, fh, fi);
+	}
+
+}
